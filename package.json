@@ -1,7 +1,7 @@
 {
   "name": "caal",
   "version": "0.0.1",
-  "description": "CaaL is a HA distributed lock management API for Docker platforms.",
+  "description": "CaaL is a HA distributed lock management CLI and library for Docker platforms.",
   "main": "gulp",
   "directories": {
     "doc": "docs"

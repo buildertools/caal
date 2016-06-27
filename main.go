@@ -12,7 +12,7 @@ import (
 func main() {
 	app := cli.NewApp()
 	app.Name = path.Base(os.Args[0])
-	app.Usage = "A distributed lock management API for Docker platforms."
+	app.Usage = "A distributed lock management CLI and library for Docker platforms."
 	app.Version = VERSION
 	app.Authors = []cli.Author{{Name: "Jeff Nickoloff", Email: "jeff@allingeek.com"}}
 	app.Flags = flags
