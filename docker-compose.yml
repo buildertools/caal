@@ -1,0 +1,88 @@
+# Uses an empty image and mounts in the only binary.
+# This is helpful in development because it remove the image build process
+# from the redeployment chain. This is Go afterall and we like our builds
+# minimal. Using volumes in this way we don't even need to recreate the
+# container. We can simply restart the existing one.
+caal:
+  build: .
+  dockerfile: local.df
+  volumes:
+   - ./bin:/src/buildertools/bin
+   - ./pkg:/src/buildertools/pkg
+   - .:/go/src/github.com/buildertools/caal
+  ports:
+   - 2476:2476
+  links:
+   - swarm:swarm
+   - node1:node1
+
+# Build a small docker fleet with a few dummy containers running (dind)
+swarm:
+  image: swarm
+  expose:
+   - 3376
+  links:
+   - node1:node1
+   - node2:node2
+   - node3:node3
+  command: ["manage", "-H", "tcp://0.0.0.0:3376", "nodes://node1:2375,node2:2375,node3:2375"]
+  
+node1:
+  image: docker:1.10-dind
+  privileged: true
+
+node2:
+  image: docker:1.10-dind
+  privileged: true
+
+node3:
+  image: docker:1.10-dind
+  privileged: true
+
+ds1:
+  image: docker:1.10
+  command: docker -H tcp://docker:3376 run -d --label service=PingAWS alpine ping aws.amazon.com
+  links:
+   - swarm:docker
+ds2:
+  image: docker:1.10
+  command: docker -H tcp://docker:3376 run -d --label service=PingAWS alpine ping aws.amazon.com
+  links:
+   - swarm:docker
+ds3:
+  image: docker:1.10
+  command: docker -H tcp://docker:3376 run -d --label service=PingDigitalOcean alpine ping digitalocean.com
+  links:
+   - swarm:docker
+
+# Integration tests that run every 30 seconds against caal
+#local-integ:
+#  build: ./integ
+#  links:
+#   - caal:caal
+
+redis:
+  image: redis
+  log_driver: none
+
+influxdb:
+  image: tutum/influxdb
+  expose:
+   - 8083
+   - 8086
+  ports:
+   - 8083:8083
+   - 8086:8086
+  environment:
+    PRE_CREATE_DB: "mydb"
+  log_driver: none
+
+grafana:
+  image: grafana/grafana
+  read_only: true
+  volumes:
+   - ./dashboard.json:/dashboard.json
+  ports:
+   - 3000:3000
+  links:
+   - influxdb:influxdb

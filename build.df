@@ -1,0 +1,16 @@
+FROM golang:alpine
+RUN apk --update add git
+
+COPY *.go /go/src/github.com/buildertools/caal/
+
+WORKDIR /go/
+RUN go get github.com/codegangsta/cli && \
+    go get gopkg.in/yaml.v2 && \
+    go get github.com/samalba/dockerclient && \
+    go get github.com/gin-gonic/gin && \
+    go get github.com/Sirupsen/logrus
+
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/caal-linux64 -v github.com/buildertools/caal
+RUN CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o bin/caal-darwin64 -v github.com/buildertools/caal
+
+CMD echo CaaL build container

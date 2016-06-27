@@ -1,0 +1,19 @@
+{
+  "name": "caal",
+  "version": "0.0.1",
+  "description": "CaaL is a HA distributed lock management API for Docker platforms.",
+  "main": "gulp",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "gulp": "^3.9.0",
+    "gulp-util": "^3.0.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "gulp test"
+  },
+  "author": "Jeff Nickoloff \"jeff@allingeek.com\"",
+  "license": "ISC"
+}

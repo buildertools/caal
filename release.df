@@ -1,0 +1,3 @@
+FROM scratch
+COPY ./bin/caal-linux64 /bin/
+ENTRYPOINT ["/bin/caal-linux64"]
