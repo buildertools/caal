@@ -1,4 +1,4 @@
-# CaaL - Container as a Lock
+# [PoC] CaaL - Container as a Lock
 
 CaaL leverages both the scarcity and interactivity of named containers in a Docker Swarm cluster to provide locks.
 
